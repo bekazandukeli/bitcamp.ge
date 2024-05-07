@@ -15,44 +15,51 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  showAdditionalFields?: boolean;
+}
 
 type FormData = z.infer<typeof userAuthSchema>
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, showAdditionalFields = true, ...props }: UserAuthFormProps) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(userAuthSchema),
+    resolver: zodResolver(userAuthSchema)
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
   const searchParams = useSearchParams()
 
+
   async function onSubmit(data: FormData) {
     setIsLoading(true)
 
-    const signInResult = await signIn("email", {
-      email: data.email.toLowerCase(),
-      redirect: false,
+    if (showAdditionalFields) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/signup`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      }).then((response) => {
+        response
+      })
+    }
+
+    const signInResult = await signIn("credentials", {
+      username: data.username,
+      password: data.password,
+      redirect: true,
       callbackUrl: searchParams?.get("from") || "/dashboard",
     })
 
     setIsLoading(false)
 
-    if (!signInResult?.ok) {
-      return toast({
-        title: "Something went wrong.",
-        description: "Your sign in request failed. Please try again.",
-        variant: "destructive",
-      })
-    }
-
     return toast({
-      title: "Check your email",
-      description: "We sent you a login link. Be sure to check your spam too.",
+      title: "გამარჯობა 👋",
+      description: "კეთილი იყოს შენი მობრძანება 🎉",
     })
   }
 
@@ -61,18 +68,34 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="username">
+              Username
+            </Label>
+            <Input
+              id="username"
+              placeholder="username"
+              type="hidden"
+              autoCapitalize="none"
+              autoCorrect="off"
+              disabled
+              {...register("username")}
+            />
+          </div>
+
+          <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
-              Email
+              ელ.ფოსტა
             </Label>
             <Input
               id="email"
-              placeholder="name@example.com"
+              placeholder="ელ.ფოსტის მისამართი"
               type="email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading || isGitHubLoading}
               {...register("email")}
+              onChange={(e) => { setValue("username", e.target.value); }}
             />
             {errors?.email && (
               <p className="px-1 text-xs text-red-600">
@@ -80,40 +103,99 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </p>
             )}
           </div>
+
+          {showAdditionalFields && (
+            <>
+              <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="first_name">
+                  სახელი
+                </Label>
+                <Input
+                  id="first_name"
+                  placeholder="თქვენი სახელი"
+                  type="text"
+                  autoCapitalize="none"
+                  autoComplete="first_name"
+                  autoCorrect="off"
+                  disabled={isLoading || isGitHubLoading}
+                  {...register("first_name")}
+                />
+                {errors?.first_name && (
+                  <p className="px-1 text-xs text-red-600">
+                    {errors.first_name.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="last_name">
+                  გვარი
+                </Label>
+                <Input
+                  id="last_name"
+                  placeholder="თქვენი გვარი"
+                  type="text"
+                  autoCapitalize="none"
+                  autoComplete="last_name"
+                  autoCorrect="off"
+                  disabled={isLoading || isGitHubLoading}
+                  {...register("last_name")}
+                />
+                {errors?.last_name && (
+                  <p className="px-1 text-xs text-red-600">
+                    {errors.last_name.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="phone_number">
+                  ტელეფონი
+                </Label>
+                <Input
+                  id="phone_number"
+                  placeholder="ტელეფონის ნომერი"
+                  type="text"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  disabled={isLoading || isGitHubLoading}
+                  {...register("phone_number")}
+                />
+                {errors?.phone_number && (
+                  <p className="px-1 text-xs text-red-600">
+                    {errors.phone_number.message}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="password">
+              პაროლი
+            </Label>
+            <Input
+              id="password"
+              placeholder="პაროლი"
+              type="password"
+              autoCapitalize="none"
+              autoCorrect="off"
+              disabled={isLoading || isGitHubLoading}
+              {...register("password")}
+            />
+            {errors?.password && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
           <button className={cn(buttonVariants())} disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In with Email
+            {showAdditionalFields ? "რეგისტრაცია" : "შესვლა"}
           </button>
         </div>
       </form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
-      <button
-        type="button"
-        className={cn(buttonVariants({ variant: "outline" }))}
-        onClick={() => {
-          setIsGitHubLoading(true)
-          signIn("github")
-        }}
-        disabled={isLoading || isGitHubLoading}
-      >
-        {isGitHubLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
-        )}{" "}
-        Github
-      </button>
     </div>
   )
 }

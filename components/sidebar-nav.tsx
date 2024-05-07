@@ -4,8 +4,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { SidebarNavItem } from "types"
-import { cn } from "@/lib/utils"
 import { docsConfig } from "@/config/docs"
+import { cn } from "@/lib/utils"
 
 export interface DocsSidebarNavProps {
   items: SidebarNavItem[]
@@ -14,7 +14,7 @@ export interface DocsSidebarNavProps {
 export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
   const pathname = usePathname()
 
-  if(items.length === 0) {
+  if (items.length === 0) {
     items = getDynamicMenuItems(pathname)
   }
 
@@ -34,20 +34,34 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
   ) : null
 }
 
-
-function getDynamicMenuItems(pathname: string | null): SidebarNavItem[]{
+function getDynamicMenuItems(pathname: string | null): SidebarNavItem[] {
   let items: SidebarNavItem[] = []
-  if (pathname?.includes('javascript/2023f')) {
+  if (pathname?.includes("javascript/2023f")) {
     items = docsConfig.javasScript2023ClassNav
   }
-
-  if (pathname?.includes('python/2023f')) {
+  if (pathname?.includes("javascript/2024w")) {
+    items = docsConfig.javasScript2024ClassNav
+  }
+  if (pathname?.includes("frontendbasics/2023f")) {
+    items = docsConfig.frontEndBasics2023ClassNav
+  }
+  if (pathname?.includes("frontendbasics/2024w")) {
+    items = docsConfig.frontEndBasics2024ClassNav
+  }
+  if (pathname?.includes("python/2023f")) {
     items = docsConfig.python2023ClassNav
   }
-
-  return items;
+  if (pathname?.includes("react/2022w")) {
+    items = docsConfig.react2022ClassNav
+  }
+  if (pathname?.includes("react/2023f")) {
+    items = docsConfig.react2023ClassNav
+  }
+  if (pathname?.includes("python/2024w")) {
+    items = docsConfig.python2024ClassNav
+  }
+  return items
 }
-
 
 interface DocsSidebarNavItemsProps {
   items: SidebarNavItem[]

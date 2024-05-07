@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { allPrograms } from "contentlayer/generated"
 
 import { getTableOfContents } from "@/lib/toc"
+import { Badge } from "@/components/ui/badge"
 import { Mdx } from "@/components/mdx-components"
 import { DocsPageHeader } from "@/components/page-header"
 import { DocsPager } from "@/components/pager"
@@ -9,9 +10,13 @@ import { DashboardTableOfContents } from "@/components/toc"
 
 import "@/styles/mdx.css"
 import { Metadata } from "next"
+import Link from "next/link"
 
 import { env } from "@/env.mjs"
-import { absoluteUrl } from "@/lib/utils"
+import { programs } from "@/config/programs"
+import { absoluteUrl, generateDefaultMetaData } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+import { Icons } from "@/components/icons"
 
 interface ProgramPageProps {
   params: {
@@ -30,46 +35,14 @@ async function getProgramFromParams(params) {
   return program
 }
 
-export async function generateMetadata({
-  params,
-}: ProgramPageProps): Promise<Metadata> {
-  const program = await getProgramFromParams(params)
+export async function generateMetadata({ params }: ProgramPageProps) {
+  const page = await getProgramFromParams(params)
 
-  if (!program) {
+  if (!page) {
     return {}
   }
 
-  const url = env.NEXT_PUBLIC_APP_URL
-
-  const ogUrl = new URL(`${url}/api/og`)
-  ogUrl.searchParams.set("heading", program.description ?? program.title)
-  ogUrl.searchParams.set("type", "Documentation")
-  ogUrl.searchParams.set("mode", "dark")
-
-  return {
-    title: program.title,
-    description: program.description,
-    openGraph: {
-      title: program.title,
-      description: program.description,
-      type: "article",
-      url: absoluteUrl(program.slug),
-      images: [
-        {
-          url: ogUrl.toString(),
-          width: 1200,
-          height: 630,
-          alt: program.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: program.title,
-      description: program.description,
-      images: [ogUrl.toString()],
-    },
-  }
+  return generateDefaultMetaData(page)
 }
 
 export async function generateStaticParams(): Promise<
@@ -78,6 +51,53 @@ export async function generateStaticParams(): Promise<
   return allPrograms.map((program) => ({
     slug: program.slugAsParams.split("/"),
   }))
+}
+
+const ProgramCards = () => {
+  return (
+    <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {programs.map((program) => {
+        const Icon = Icons[program.icon]
+        return (
+          <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+            <div className="flex h-[400px] flex-col justify-between rounded-md p-6">
+              <span className="mx-auto my-0">
+                <Icon className="h-12 w-12" />
+              </span>
+              <div className="space-y-2">
+                <h3 className="font-bold">
+                  {program.name}{" "}
+                  <Badge variant="outline" className="mr-2">
+                    {program.badge}
+                  </Badge>
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {program.description}
+                </p>
+                <div className="py-4">
+                  {program.technologies.map((technology) => (
+                    <Badge variant="secondary" className="mr-2">
+                      {technology}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex">
+                  <Link
+                    href={program.url}
+                    className={
+                      buttonVariants({ variant: "default" }) + " mb-4 w-full"
+                    }
+                  >
+                    ვრცლად
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default async function DocPage({ params }: ProgramPageProps) {
@@ -90,18 +110,27 @@ export default async function DocPage({ params }: ProgramPageProps) {
   const toc = await getTableOfContents(program.body.raw)
 
   return (
-    <main className="relative py-6 lg:gap-10 lg:py-10 xl:grid xl:grid-cols-[1fr_300px]">
+    <main className="relative py-6 lg:gap-10 lg:py-10 xl:grid">
       <div className="mx-auto w-full min-w-0">
-        <DocsPageHeader heading={program.title} text={program.description} />
-        <Mdx code={program.body.code} />
-        <hr className="my-4 md:my-6" />
-        <DocsPager doc={program} />
+        {program.title === "BitCamp - ის პროგრამები" ? (
+          <ProgramCards /> 
+        ) : (
+          <>
+            <DocsPageHeader
+              heading={program.title}
+              text={program.description}
+            />
+            <Mdx code={program.body.code} />
+            <hr className="my-4 md:my-6" />
+            <DocsPager doc={program} />
+          </>
+        )}
       </div>
-      <div className="hidden text-sm xl:block">
+      {/* <div className="hidden text-sm xl:block">
         <div className="sticky top-16 -mt-10 max-h-[calc(var(--vh)-4rem)] overflow-y-auto pt-10">
           <DashboardTableOfContents toc={toc} />
         </div>
-      </div>
+      </div> */}
     </main>
   )
 }

@@ -6,6 +6,10 @@ import { cn } from "@/lib/utils"
 import { Callout } from "@/components/callout"
 import { MdxCard } from "@/components/mdx-card"
 import PinProtected from "@/components/mdx-pin-protected"
+import ExerciseCard from '@/components/exercise-card';
+import PreRegistrationForm from "@/components/pre-registration-form"
+import RegistrationBtn from "@/components/registration-btn"
+import {Button} from "@/components/ui/button"
 
 const components = {
   h1: ({ className, ...props }) => (
@@ -157,6 +161,15 @@ const components = {
       {...props}
     />
   ),
+  Unlocked: ({ className, ...props }) => (
+    <div
+      {...props}
+    />
+  ),
+  ExerciseCard,
+  PreRegistrationForm,
+  RegistrationBtn,
+  Button,
 }
 
 interface MdxProps {

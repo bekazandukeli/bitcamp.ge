@@ -7,16 +7,20 @@ export const marketingConfig: MarketingConfig = {
       href: "/programs",
     },
     {
-      title: "ფასები",
-      href: "/programs/about/pricing",
+      title: "სერვისები და ფასები",
+      href: "/servisebi-da-fasebi",
     },
     {
       title: "ბლოგი",
       href: "/blog",
     },
     {
-      title: "HTML",
-      href: "/courses/html/1-shesavali",
+      title: "მენტორები",
+      href: "/mentors",
+    },
+    {
+      title: "უფასო კურსები",
+      href: "/classes",
     },
   ],
 }

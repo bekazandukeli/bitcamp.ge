@@ -5,11 +5,12 @@ import Link from "next/link"
 import { useSelectedLayoutSegment } from "next/navigation"
 
 import { MainNavItem } from "types"
+import { marketingConfig } from "@/config/marketing"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { MobileNav } from "@/components/mobile-nav"
-import { marketingConfig } from "@/config/marketing"
+import { MenuIcon, MenuSquareIcon } from "lucide-react"
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -23,10 +24,10 @@ export function MainNav({ items, children }: MainNavProps) {
   return (
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="hidden items-center space-x-2 md:flex">
-        <img width={"30px"} height={"30px"} src="/images/logo.jpg" />
-        <span className="hidden font-bold sm:inline-block">
+        <img width={"90px"} height={"90px"} src="/images/logo.jpg" />
+        {/* <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
-        </span>
+        </span> */}
       </Link>
       {items?.length ? (
         <nav className="hidden gap-6 md:flex">
@@ -35,10 +36,10 @@ export function MainNav({ items, children }: MainNavProps) {
               key={index}
               href={item.disabled ? "#" : item.href}
               className={cn(
-                "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
+                "flex items-center text-lg font-bold transition-colors hover:text-foreground sm:text-sm",
                 item.href.startsWith(`/${segment}`)
                   ? "text-foreground"
-                  : "text-foreground/60",
+                  : "text-foreground",
                 item.disabled && "cursor-not-allowed opacity-80"
               )}
             >
@@ -51,8 +52,13 @@ export function MainNav({ items, children }: MainNavProps) {
         className="flex items-center space-x-2 md:hidden"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       >
-        {showMobileMenu ? <Icons.close /> : <img width={"30px"} height={"30px"} src="/images/logo.jpg " />}
-        <span className="font-bold">ნავიგაცია </span>
+        <MenuIcon />
+
+        {showMobileMenu ? (
+          <Icons.close />
+        ) : (
+          <img width={"60px"} height={"60px"} src="/images/logo.jpg " />
+        )}
       </button>
       {showMobileMenu && items && (
         <MobileNav items={marketingConfig.mainNav}>{children}</MobileNav>

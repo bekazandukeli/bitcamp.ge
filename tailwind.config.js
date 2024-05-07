@@ -8,6 +8,16 @@ module.exports = {
     "./ui/**/*.{ts,tsx}",
     "./content/**/*.{md,mdx}",
   ],
+  safelist: [
+    "grid-cols-1",
+    "grid-cols-2",
+    "grid-cols-3",
+    "grid-cols-4",
+    "sm:grid-cols-1",
+    "sm:grid-cols-2",
+    "sm:grid-cols-3",
+    "sm:grid-cols-4",
+  ],
   darkMode: ["class"],
   theme: {
     container: {
@@ -24,6 +34,7 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        mainBorderColor: "rgb(120,47,54)",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -71,10 +82,26 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "background-shine": {
+          from: {
+            backgroundPosition: "0 0",
+          },
+          to: {
+            backgroundPosition: "-200% 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "background-shine": "background-shine 2s linear infinite",
+      },
+      backgroundImage: {
+        "bitcamp-red":
+          "linear-gradient(135deg, rgba(180,38,53,1) 19%, rgba(217,56,66,1) 46%, rgba(183,39,54,1) 73%, rgba(217,56,66,1) 96%)",
+      },
+      backgroundColor: {
+        "solid-color": "rgb(180,38,53)",
       },
     },
   },

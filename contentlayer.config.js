@@ -28,6 +28,9 @@ export const Doc = defineDocumentType(() => ({
     description: {
       type: "string",
     },
+    ogImage: {
+      type: 'string'
+    },
     published: {
       type: "boolean",
       default: true,
@@ -48,6 +51,15 @@ export const Course = defineDocumentType(() => ({
     description: {
       type: "string",
     },
+    date:{
+      type:"string"
+    },
+    author:{
+      type:"string"
+    },
+    ogImage: {
+      type: 'string'
+    },
     published: {
       type: "boolean",
       default: true,
@@ -65,6 +77,12 @@ export const Program = defineDocumentType(() => ({
     title: {
       type: "string",
       required: true,
+    },
+    ogImage: {
+      type: 'string'
+    },
+    image:{
+      type:"string"
     },
     description: {
       type: "string",
@@ -87,6 +105,9 @@ export const Mentor = defineDocumentType(() => ({
       type: "string",
       required: true,
     },
+    ogImage: {
+      type: 'string'
+    },
     description: {
       type: "string",
     },
@@ -106,6 +127,12 @@ export const Class = defineDocumentType(() => ({
     title: {
       type: "string",
       required: true,
+    },
+    ogImage: {
+      type: 'string'
+    },
+    image:{
+      type:"string"
     },
     description: {
       type: "string",
@@ -130,6 +157,9 @@ export const Guide = defineDocumentType(() => ({
     },
     description: {
       type: "string",
+    },
+    ogImage: {
+      type: 'string'
     },
     date: {
       type: "date",
@@ -158,6 +188,9 @@ export const Post = defineDocumentType(() => ({
     },
     description: {
       type: "string",
+    },
+    ogImage: {
+      type: 'string'
     },
     date: {
       type: "date",
@@ -196,13 +229,16 @@ export const Author = defineDocumentType(() => ({
     description: {
       type: "string",
     },
+    ogImage: {
+      type: 'string'
+    },
     avatar: {
       type: "string",
       required: true,
     },
     twitter: {
       type: "string",
-      required: true,
+      required: false,
     },
   },
   computedFields,
@@ -220,6 +256,10 @@ export const Page = defineDocumentType(() => ({
     description: {
       type: "string",
     },
+    ogImage: {
+      type: 'string'
+    }
+    
   },
   computedFields,
 }))

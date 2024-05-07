@@ -1,41 +1,33 @@
-import Link from "next/link"
-import { redirect } from "next/navigation"
-
-import { env } from "@/env.mjs"
-import { siteConfig } from "@/config/site"
-import { authOptions } from "@/lib/auth"
-import { getCurrentUser } from "@/lib/session"
 import { DashboardHeader } from "@/components/header"
 import { DashboardShell } from "@/components/shell"
-import SubscriptionsList from "@/components/subscriptions-list"
-import { Button } from "@/components/ui/button"
+import { ServiceCard } from "@/components/service-card"
+
+import { RocketIcon } from "@radix-ui/react-icons"
+
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import PricingCardComponent from "@/components/price-component"
+import { getCurrentUser } from "@/lib/session"
+import IntentNavigator from "@/components/intent-navigator"
+import ServiceNavigator from "@/components/service-navigator"
+
 
 export const metadata = {
   title: "შეძენილი სერვისები",
 }
 
-export default async function DashboardPage() {
-  const user = await getCurrentUser()
 
-  if (!user) {
-    redirect(authOptions?.pages?.signIn || "/login")
-  }
-
+export default async function DashboardPage(pageProps) {
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading="ჩემი სივრცე"
-        text=""
-      >
-        {/* <PostCreateButton /> */}
+      <DashboardHeader heading="ჩემი სივრცე" text="">
       </DashboardHeader>
-      <div>
-        <section
-          className="container space-y-6 bg-slate-50 dark:bg-transparent "
-        >
-            <SubscriptionsList />
-        </section>
-      </div>
+      <ServiceNavigator />
+
+      <PricingCardComponent />
     </DashboardShell>
   )
 }

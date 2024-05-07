@@ -1,39 +1,39 @@
 "use client"
 
-import React, { useState } from "react"
-import { cn } from "@/lib/utils"
+import React, { useEffect, useState } from "react"
 
+import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 
-const pinCode = "1024"
+const PinProtected = ({ href, className, children, disabled, ...props }) => {
+  const pinCode = "0302" // Pin code definition
 
-function PinProtected({ 
-  href,
-  className,
-  children,
-  disabled,
-  ...props
-}) {
   const [pin, setPin] = useState("")
-  const [isVerified, setIsVerified] = useState(window.localStorage.getItem("pin") === pinCode)
+  const [isVerified, setIsVerified] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedPin = window.localStorage.getItem("pin")
+      setIsVerified(storedPin === pinCode)
+    }
+  }, [])
 
   const handlePinSubmit = (event) => {
     event.preventDefault()
 
     if (pin === pinCode) {
-      window.localStorage.setItem("pin", pinCode);
-      setIsVerified(true)
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("pin", pinCode)
+        setIsVerified(true)
+      }
     }
   }
 
   return (
-  <div
-    className={cn(
-      disabled && "cursor-not-allowed opacity-60",
-      className
-    )}
-    {...props}
-  >
+    <div
+      className={cn(disabled && "cursor-not-allowed opacity-60", className)}
+      {...props}
+    >
       {!isVerified ? (
         <form onSubmit={handlePinSubmit}>
           <label>

@@ -71,7 +71,6 @@ export type Mentor = {
   }[]
 }
 
-
 export type Subject = {
   name: string
   badge: string
@@ -93,7 +92,13 @@ export type DocsConfig = {
   mentorsNav: SidebarNavItem[]
   classesNav: SidebarNavItem[]
   javasScript2023ClassNav: SidebarNavItem[]
+  javasScript2024ClassNav: SidebarNavItem[]
+  frontEndBasics2023ClassNav: SidebarNavItem[]
+  frontEndBasics2024ClassNav: SidebarNavItem[]
   python2023ClassNav: SidebarNavItem[]
+  react2022ClassNav: SidebarNavItem[]
+  react2023ClassNav: SidebarNavItem[]
+  python2024ClassNav: SidebarNavItem[]
 }
 
 export type MarketingConfig = {
@@ -117,9 +122,29 @@ export type UserSubscriptionPlan = SubscriptionPlan &
     isPro: boolean
   }
 
-
-  declare global {
-    interface Window {
-      fbq: Function;
-    }
+declare global {
+  interface Window {
+    fbq: Function
   }
+}
+
+export type IntentItem = {
+  machine_name: string
+  description: string
+  url: string
+  service_id: number
+  program_id: number
+  mentor_id: number
+  status: string
+  action: string
+  actionLabel: string
+}
+
+export type IntentItems = {
+  free: IntentItem
+  minimal: IntentItem
+  private: IntentItem
+  pro: IntentItem
+  kids: IntentItem
+  none: IntentItem
+}
